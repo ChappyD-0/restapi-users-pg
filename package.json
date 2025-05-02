@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leonardoalta/restapi.git"
+    "url": "git+https://github.com/ChappyD-0/restapi.git"
   },
-  "author": "leo",
+  "author": "chappyd-0",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/leonardoalta/restapi/issues"
+    "url": "https://github.com/ChappyD-0/restapi-users-pg.git/issues"
   },
-  "homepage": "https://github.com/leonardoalta/restapi#readme",
+  "homepage": "https://github.com/ChappyD-0/restapi-users-pg.git#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
