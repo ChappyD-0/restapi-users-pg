@@ -43,60 +43,97 @@ function renderTable(users){
 async function getUsers(){
   try {
     const res = await fetch(API_URL);
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || 'Error al cargar usuarios');
+    }
     const { users } = await res.json();
     usersData = users;
     renderTable(users);
   } catch(e){
-    showMessage('Error al cargar usuarios','danger');
+    showMessage(e.message, 'danger');
   }
 }
 
 // POST
 async function postUser(){
-  const payload = {
-    name:     document.getElementById('name').value,
-    email:    document.getElementById('email').value,
-    age:      +document.getElementById('age').value || 0,
-    comments: document.getElementById('comments').value
-  };
-  const res = await fetch(API_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) throw new Error(res.statusText);
-  showMessage('Usuario creado');
-  clearForm();
-  getUsers();
+  try {
+    const payload = {
+      name:     document.getElementById('name').value,
+      email:    document.getElementById('email').value,
+      age:      +document.getElementById('age').value || 0,
+      comments: document.getElementById('comments').value
+    };
+    
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || 'Error al crear usuario');
+    }
+
+    showMessage('Usuario creado');
+    clearForm();
+    await getUsers();
+  } catch(e) {
+    showMessage(e.message, 'danger');
+  }
 }
 
 // PUT
 async function updateUser(id){
-  const payload = {
-    name:     document.getElementById('name').value,
-    email:    document.getElementById('email').value,
-    age:      +document.getElementById('age').value || 0,
-    comments: document.getElementById('comments').value
-  };
-  const res = await fetch(`${API_URL}/${id}`, {
-    method:'PUT',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) throw new Error(res.statusText);
-  showMessage('Usuario actualizado');
-  clearForm();
-  getUsers();
+  try {
+    const payload = {
+      name:     document.getElementById('name').value,
+      email:    document.getElementById('email').value,
+      age:      +document.getElementById('age').value || 0,
+      comments: document.getElementById('comments').value
+    };
+
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || 'Error al actualizar usuario');
+    }
+
+    showMessage('Usuario actualizado');
+    clearForm();
+    await getUsers();
+  } catch(e) {
+    showMessage(e.message, 'danger');
+  }
 }
 
 // DELETE
 async function deleteUser(id){
-  if (!confirm('¿Eliminar usuario?')) return;
-  const res = await fetch(`${API_URL}/${id}`, { method:'DELETE' });
-  if (res.status!==204) throw new Error(res.statusText);
-  showMessage('Usuario borrado','warning');
-  getUsers();
+  try {
+    if (!confirm('¿Eliminar usuario?')) return;
+    
+    const res = await fetch(`${API_URL}/${id}`, { 
+      method: 'DELETE' 
+    });
+
+    if (res.status !== 204) {
+      const error = await res.json();
+      throw new Error(error.message || 'Error al eliminar usuario');
+    }
+
+    showMessage('Usuario borrado', 'warning');
+    await getUsers();
+  } catch(e) {
+    showMessage(e.message, 'danger');
+  }
 }
+
 
 // Carga datos en el formulario para editar
 function editUser(id){
