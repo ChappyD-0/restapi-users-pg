@@ -23,7 +23,7 @@ module.exports = {
  require: true, 
   rejectUnauthorized: false }
     }
-   
-  }
+  },
+  logging: true 
 };
 

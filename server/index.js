@@ -1,33 +1,34 @@
- const path = require('path');            // ← AÑADE ESTA LÍNEA
- const cors = require('cors');
- const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const express = require('express');
 const routes = require('../routes');
-
 
 const server = express();
 
-server.use(express.static(path.join(__dirname, '../public')));
-server.use('/api', cors(), express.json(), routes);
-const PORT = process.env.PORT || 3000; // Definir el puerto con variable de entorno o 3000 por defecto
-
+// 1) Configuración de CORS
 const corsOptions = {
-  
   origin: [
-    'https://restapi-users-pg-1w1b.onrender.com', // URL frontend
-    'http://localhost:8080' // Desarrollo
-  ],// Origen frontend
-  methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  allowedHeaders: 'Content-Type,Authorization'
+    'https://restapi-users-pg-1w1b.onrender.com',  // tu front en Render
+    'http://localhost:8080'                        // tu dev local
+  ],
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: true
 };
+server.use(cors(corsOptions));
+server.options('*', cors(corsOptions));
 
-server.use(cors(corsOptions)); // Habilita CORS para todas las rutas
-server.options('*', cors(corsOptions)); //Habilita CORS para preflight requests
-
+// 2) Body parser y estáticos
 server.use(express.json());
+server.use(express.static(path.join(__dirname, '../public')));
+
+// 3) Rutas API
 server.use('/api', routes);
 
-// Iniciar el servidor y escuchar en el puerto definido
-
+// 4) Middleware de errores
+server.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: err.message });
+});
 
 module.exports = server;
-
