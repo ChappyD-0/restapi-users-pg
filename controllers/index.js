@@ -6,7 +6,11 @@ const createUser = async (req, res) => {
     const user = await models.User.create(req.body);
     return res.status(201).json({ user });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    console.error('Error creando usuario:', error); // ← Log del error
+    return res.status(500).json({
+      error: error.message,
+      details: error.errors?.map(e => e.message) // ← Detalles de validación
+    });
   }
 };
 
