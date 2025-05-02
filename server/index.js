@@ -11,7 +11,11 @@ server.use('/api', cors(), express.json(), routes);
 const PORT = process.env.PORT || 3000; // Definir el puerto con variable de entorno o 3000 por defecto
 
 const corsOptions = {
-  origin: 'http://127.0.0.1:8080', // Origen de tu frontend
+  
+  origin: [
+    'https://restapi-users-pg-1w1b.onrender.com', // URL frontend
+    'http://localhost:8080' // Desarrollo
+  ],// Origen frontend
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization'
 };
